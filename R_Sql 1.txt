@@ -1,0 +1,292 @@
+Enter password: *********
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 21
+Server version: 8.0.36 MySQL Community Server - GPL
+
+Copyright (c) 2000, 2024, Oracle and/or its affiliates.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> R0se@my27
+    ->
+    ->
+    ->
+    ->
+    ->
+    ->
+    -> databases
+    -> show databases;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'R0se@my27
+
+
+
+
+
+
+databases
+show databases' at line 1
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+6 rows in set (0.00 sec)
+
+mysql> create database blooddonation;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| blooddonation      |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+7 rows in set (0.00 sec)
+
+mysql> use blooddonation;
+Database changed
+mysql> create table hospital( hosp_id int primary key, hosp_name varchar(30), hosp_ph bigint ,hosp_mail varchar(50));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> create table hosp_location(hosp_id int, hosp_loc varchar(50), primary key(hosp_id,hosp_loc), foreign key(hosp_id) references hospital(hosp_id));
+Query OK, 0 rows affected (0.06 sec)
+
+mysql> create table blood_bank(bb_no int primary key, blood_quan varchar(10), orders int, hosp_id int,foreign key(hosp_id) references hospital(hosp_id) on delete cascade);
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> create table blood(blood_id int primary key , blood_type varchar(6), b_date date, exp_date date, b_cost int,bb_no int,foreign key( bb_no) references blood_bank(bb_no) on delete cascade);
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> create table donor( don_id int primary key, name varchar(20),gender char,dob date, addr varchar(30),phone bigint, blood_id int, foreign key(blood_id) references blood(blood_id) on delete cascade);
+Query OK, 0 rows affected (0.10 sec)
+
+mysql> create table registers(blood_id int , foreign key(blood_id) references blood(blood_id) on delete cascade, don_id int,foreign key(don_id) references donor(don_id) on delete cascade, primary key(blood_id,don_id));
+Query OK, 0 rows affected (0.09 sec)
+
+mysql> insert into hospital (hosp_id,hosp_name,hosp_ph,hosp_mail) values ('101','cmh','9867543765','cmh@gmail.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into hospital (hosp_id,hosp_name,hosp_ph,hosp_mail) values ('102','apollo','6917491285','apollo@gmail.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into hospital (hosp_id,hosp_name,hosp_ph,hosp_mail) values ('103','manipal','9912744120','manipal@gmail.com');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into hosp_location (hosp_id,hosp_loc) values ('101','bangalore');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into hosp_location (hosp_id,hosp_loc) values ('102','mumbai');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into hosp_location (hosp_id,hosp_loc) values ('103','bangalore');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into hosp_location (hosp_id,hosp_loc) values ('102','goa');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into hosp_location (hosp_id,hosp_loc) values ('103','hyderabad');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into blood_bank (bb_no,blood_quan,orders,hosp_id) values ('1','200 ml','2','101');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into blood_bank (bb_no,blood_quan,orders,hosp_id) values ('2','200 ml','1','102');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into blood_bank (bb_no,blood_quan,orders,hosp_id) values ('3','250 ml','2','102');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into blood_bank (bb_no,blood_quan,orders,hosp_id) values ('4','200 ml','1','103');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into blood_bank (bb_no,blood_quan,orders,hosp_id) values ('5','250 ml','3','101');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into blood (blood_id,blood_type,b_date,exp_date,b_cost,bb_no) values ('11','A +ve','2024-01-10','2024-03-10','1500','1');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into blood (blood_id,blood_type,b_date,exp_date,b_cost,bb_no) values ('12','B +ve','2024-01-15','2024-03-15','1500','3');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into blood (blood_id,blood_type,b_date,exp_date,b_cost,bb_no) values ('14','O +ve','2024-01-05','2024-03-05','2000','4');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into blood (blood_id,blood_type,b_date,exp_date,b_cost,bb_no) values ('15','O -ve','2024-02-01','2024-04-01','5000','5');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into blood (blood_id,blood_type,b_date,exp_date,b_cost,bb_no) values ('13','AB +ve','2024-02-01','2024-04-01','2500','2');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into donor(don_id,name,gender,dob,addr,phone,blood_id) values('51','sara leon','F','2000-06-27','bangalore','8976354689',11);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into donor(don_id,name,gender,dob,addr,phone,blood_id) values('52','rhea justin','F','1980-05-31','delhi','9946324689','12');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into donor(don_id,name,gender,dob,addr,phone,blood_id) values('53','akshat singh','M','2002-11-27','chennai','7846120681','13');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into donor(don_id,name,gender,dob,addr,phone,blood_id) values('54','neha sharma','F','1998-12-13','goa','6856127482','14');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into donor(don_id,name,gender,dob,addr,phone,blood_id) values('55','ram singh','M','2003-08-30','bangalore','9846127312','15');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into registers (blood_id,don_id) values (11,51),(12,52),(13,54),(14,53),(15,55);
+Query OK, 5 rows affected (0.01 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> select * from hospital;
++---------+-----------+------------+-------------------+
+| hosp_id | hosp_name | hosp_ph    | hosp_mail         |
++---------+-----------+------------+-------------------+
+|     101 | cmh       | 9867543765 | cmh@gmail.com     |
+|     102 | apollo    | 6917491285 | apollo@gmail.com  |
+|     103 | manipal   | 9912744120 | manipal@gmail.com |
++---------+-----------+------------+-------------------+
+3 rows in set (0.00 sec)
+
+mysql> select * from hosp_location;
++---------+-----------+
+| hosp_id | hosp_loc  |
++---------+-----------+
+|     101 | bangalore |
+|     102 | goa       |
+|     102 | mumbai    |
+|     103 | bangalore |
+|     103 | hyderabad |
++---------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from blood_bank;
++-------+------------+--------+---------+
+| bb_no | blood_quan | orders | hosp_id |
++-------+------------+--------+---------+
+|     1 | 200 ml     |      2 |     101 |
+|     2 | 200 ml     |      1 |     102 |
+|     3 | 250 ml     |      2 |     102 |
+|     4 | 200 ml     |      1 |     103 |
+|     5 | 250 ml     |      3 |     101 |
++-------+------------+--------+---------+
+5 rows in set (0.00 sec)
+
+mysql> select * from blood;
++----------+------------+------------+------------+--------+-------+
+| blood_id | blood_type | b_date     | exp_date   | b_cost | bb_no |
++----------+------------+------------+------------+--------+-------+
+|       11 | A +ve      | 2024-01-10 | 2024-03-10 |   1500 |     1 |
+|       12 | B +ve      | 2024-01-15 | 2024-03-15 |   1500 |     3 |
+|       13 | AB +ve     | 2024-02-01 | 2024-04-01 |   2500 |     2 |
+|       14 | O +ve      | 2024-01-05 | 2024-03-05 |   2000 |     4 |
+|       15 | O -ve      | 2024-02-01 | 2024-04-01 |   5000 |     5 |
++----------+------------+------------+------------+--------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from donor;
++--------+--------------+--------+------------+-----------+------------+----------+
+| don_id | name         | gender | dob        | addr      | phone      | blood_id |
++--------+--------------+--------+------------+-----------+------------+----------+
+|     51 | sara leon    | F      | 2000-06-27 | bangalore | 8976354689 |       11 |
+|     52 | rhea justin  | F      | 1980-05-31 | delhi     | 9946324689 |       12 |
+|     53 | akshat singh | M      | 2002-11-27 | chennai   | 7846120681 |       13 |
+|     54 | neha sharma  | F      | 1998-12-13 | goa       | 6856127482 |       14 |
+|     55 | ram singh    | M      | 2003-08-30 | bangalore | 9846127312 |       15 |
++--------+--------------+--------+------------+-----------+------------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select * from registers;
++----------+--------+
+| blood_id | don_id |
++----------+--------+
+|       11 |     51 |
+|       12 |     52 |
+|       14 |     53 |
+|       13 |     54 |
+|       15 |     55 |
++----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> desc hospital;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| hosp_id   | int         | NO   | PRI | NULL    |       |
+| hosp_name | varchar(30) | YES  |     | NULL    |       |
+| hosp_ph   | bigint      | YES  |     | NULL    |       |
+| hosp_mail | varchar(50) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> desc hosp_location;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| hosp_id  | int         | NO   | PRI | NULL    |       |
+| hosp_loc | varchar(50) | NO   | PRI | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> desc blood_bank;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| bb_no      | int         | NO   | PRI | NULL    |       |
+| blood_quan | varchar(10) | YES  |     | NULL    |       |
+| orders     | int         | YES  |     | NULL    |       |
+| hosp_id    | int         | YES  | MUL | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> desc blood;
++------------+------------+------+-----+---------+-------+
+| Field      | Type       | Null | Key | Default | Extra |
++------------+------------+------+-----+---------+-------+
+| blood_id   | int        | NO   | PRI | NULL    |       |
+| blood_type | varchar(6) | YES  |     | NULL    |       |
+| b_date     | date       | YES  |     | NULL    |       |
+| exp_date   | date       | YES  |     | NULL    |       |
+| b_cost     | int        | YES  |     | NULL    |       |
+| bb_no      | int        | YES  | MUL | NULL    |       |
++------------+------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> desc donor;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| don_id   | int         | NO   | PRI | NULL    |       |
+| name     | varchar(20) | YES  |     | NULL    |       |
+| gender   | char(1)     | YES  |     | NULL    |       |
+| dob      | date        | YES  |     | NULL    |       |
+| addr     | varchar(30) | YES  |     | NULL    |       |
+| phone    | bigint      | YES  |     | NULL    |       |
+| blood_id | int         | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> desc registers;
++----------+------+------+-----+---------+-------+
+| Field    | Type | Null | Key | Default | Extra |
++----------+------+------+-----+---------+-------+
+| blood_id | int  | NO   | PRI | NULL    |       |
+| don_id   | int  | NO   | PRI | NULL    |       |
++----------+------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql>
